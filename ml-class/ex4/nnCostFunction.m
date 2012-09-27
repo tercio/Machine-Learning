@@ -133,7 +133,8 @@ for t = 1:m,
 	% step 2
 	% delta for output layer
 	for k = 1:num_labels,
-		delta3(k) = a3(k) - (y(m) == k);
+	    %printf ('num_labels %f %f m %d y(t) %f\n',size(num_labels),t,y(t));
+		delta3(k) = a3(k) - (y(t) == k);
 	end;
 
 	% step 3
@@ -153,6 +154,9 @@ end;
 Theta1_grad = (1/m) * DELTA1_grad;  
 Theta2_grad = (1/m) * DELTA2_grad;  
 
+
+Theta1_grad(:,2:end) = Theta1_grad(:,2:end) + ( (lambda / m) * Theta1(:,2:end) );  
+Theta2_grad(:,2:end) = Theta2_grad(:,2:end) + ( (lambda / m) * Theta2(:,2:end) );  
 
 % -------------------------------------------------------------
 
