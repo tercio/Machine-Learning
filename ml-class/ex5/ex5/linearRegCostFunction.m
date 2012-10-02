@@ -20,14 +20,18 @@ grad = zeros(size(theta));
 %
 
 
+J = (1/(2*m)) * sum( ((X * theta) - y) .^ 2   );
+J = J + ( (lambda/(2*m)) * sum(theta(2:end).^2 ) ); 
 
 
 
 
+% faz o calculo do gradiente para os dois (ou mais se houvesse) valores de theta. Nesse caso
+% sem o regularization
+grad = ((1/m) * ( X' * ((X * theta) - y) ));
 
-
-
-
+% aqui, aplica a regularizacao para os thetas a partir de 2 (j >= 1)
+grad (2:end) = grad(2:end) + ( (lambda/m) * theta(2:end)  );
 
 
 % =========================================================================
