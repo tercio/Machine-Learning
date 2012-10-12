@@ -25,6 +25,7 @@ for i=1:size(X,1),
 	tmp = [];
 	for k=1:K,
 		tmp(k) = sum (  ( (X(i,:) - centroids(k,:)) .^ 2 ) );
+		sum (  ( (X(i,:) - centroids(k,:)) .^ 2 ) )
 	end;
     [v,pos] = min (tmp)	;
 	idx (i) = pos;
