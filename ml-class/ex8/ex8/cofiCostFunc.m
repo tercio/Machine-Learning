@@ -40,20 +40,30 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+% cost
+J = (1/2) * sum(sum( R .*  (((X * Theta' )-Y).^2)  ));
+% adding regularization
+J = J + ((lambda/2) * sum(sum(Theta .^ 2))) + sum(((lambda/2) * sum(X .^ 2)));
 
+% Grads
+for i=1:num_movies,
 
+	idx = find (R(i,:) == 1); % users that rated this move i
+ 	ThetaTmp = Theta(idx,:);
+	YTmp = Y(i,idx);	
+	X_grad (i,:) = ((X(i,:) * ThetaTmp' - YTmp) * ThetaTmp) + (lambda .* X(i,:));
 
+end;
 
+for j=1:num_users,
 
+	idx = find (R(:,j) == 1); % all moves rated by user j 
+ 	ThetaTmp = Theta(j,:);
+	XTmp = X(idx,:);
+	YTmp = Y(idx,j);	
+	Theta_grad (j,:) = ((XTmp * ThetaTmp' - YTmp)' * XTmp) + (lambda .* ThetaTmp);
 
-
-
-
-
-
-
-
-
+end;
 
 % =============================================================
 
