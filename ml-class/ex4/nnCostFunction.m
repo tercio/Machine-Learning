@@ -84,16 +84,14 @@ a3 = sigmoid (z3);
 % compute cost
 % ------------------------------------------------------------------------------------
 
-for k = 1:num_labels,
+%for k = 1:num_labels,
+%	temp(k) = ( -(y == k)' * log(a3(:,k)) - (1 - (y == k)') * log (1 - a3(:,k))  );
+%end;
+%J = (1/m) * sum(temp);
 
-	
-	%printf ('y = %f\n',size(y == k)');
-	%printf ('log(a3) = %f\n',size(a3(:,k)));
-	temp(k) = ( -(y == k)' * log(a3(:,k)) - (1 - (y == k)') * log (1 - a3(:,k))  );
-    temp (k);
-end;
-
-J = (1/m) * sum(temp);
+Y = bsxfun(@eq,y,[1:num_labels]);
+temp = ( (-(Y)' * log(a3)) - ((1 - (Y)') * log (1 - a3) ) );
+J = (1/m) * sum(diag(temp));
 
 
 % ------------------------------------------------------------------------------------
@@ -111,20 +109,20 @@ reg2 = sum ( vec2.^2  );
 
 J = J + ( (lambda/(2*m)) * (reg1 + reg2)   );
 
-DELTA1_grad = zeros (size(Theta1));
-DELTA2_grad = zeros (size(Theta2));
+%DELTA1_grad = zeros (size(Theta1));
+%DELTA2_grad = zeros (size(Theta2));
 
-for t = 1:m,
+%for t = 1:m,
 
 	% step 1
 	% feedforward pass
-	a1 = X(t,:);
-	a1 = [1 a1];
+	a1 = X;
+	a1 = [ones(m,1) a1];
 
 	%a2
 	z2 = a1 * Theta1';
 	a2 = sigmoid (z2);
-	a2 = [1 a2];
+	a2 = [ones(m,1) a2];
 
 	%a3
 	z3 = a2 * Theta2';
@@ -132,29 +130,40 @@ for t = 1:m,
 
 	% step 2
 	% delta for output layer
-	for k = 1:num_labels,
-	    %printf ('num_labels %f %f m %d y(t) %f\n',size(num_labels),t,y(t));
-		delta3(k) = a3(k) - (y(t) == k);
-	end;
+	delta3 = a3 - Y;
+	%size(delta3)  % 4900 x 10
+	%size (Theta2) % 10 x 26
+	%size(z2)      % 4900 x 25
 
 	% step 3
 	% delta for hidden layer
-	delta2 = (delta3 * Theta2) .* sigmoidGradient([1 z2]);
+	% 4900 x 26 .* 
+	delta2 = (delta3 * Theta2) .* sigmoidGradient([ones(m,1) z2]);
+
+	%size(delta2)
 
 	% step 4
 	% accumulate gradient
-	delta2 = delta2(2:end);
- 	DELTA1_grad = DELTA1_grad + (delta2' * a1 );
- 	DELTA2_grad = DELTA2_grad + (delta3' * a2 );
+	%delta2 = delta2(2:end);
+	%size (delta2)
+	%size(a1)
+	%size (DELTA1_grad)
+ 	DELTA1_grad = delta2' * a1 ;
+ 	DELTA2_grad = delta3' * a2 ;
 	
 
-end;
+%end;
 
 
 Theta1_grad = (1/m) * DELTA1_grad;  
 Theta2_grad = (1/m) * DELTA2_grad;  
 
 
+
+%Theta1_grad = Theta1_grad(2:end,:) + ( (lambda / m) * Theta1  );  
+%Theta2_grad = Theta2_grad + ( (lambda / m) * Theta2 );  
+
+Theta1_grad = Theta1_grad(2:end,:);
 Theta1_grad(:,2:end) = Theta1_grad(:,2:end) + ( (lambda / m) * Theta1(:,2:end) );  
 Theta2_grad(:,2:end) = Theta2_grad(:,2:end) + ( (lambda / m) * Theta2(:,2:end) );  
 
