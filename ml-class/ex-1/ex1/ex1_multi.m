@@ -39,6 +39,7 @@ X = data(:, 1:2);
 y = data(:, 3);
 m = length(y);
 
+
 % Print out some data points
 fprintf('First 10 examples from the dataset: \n');
 fprintf(' x = [%.0f %.0f], y = %.0f \n', [X(1:10,:) y(1:10,:)]');
@@ -92,15 +93,16 @@ theta = zeros(3, 1);
 
 
 figure;
+legend;
 plot (X(:,2),y,'rx');
 hold on;
-plot (X(:,2),X(:,1:2) * theta(1:2,:), '-' );
+plot (X(:,2),X(:,1:2) * theta(1:2,:), 'r-' );
 hold off;
 
 figure;
-plot (X(:,3),y,'rx');
+plot (X(:,3),y,'gx','LineWidth',2);
 hold on;
-plot (X(:,3),[X(:,1) X(:,3)] * [theta(1,:);theta(3,:)], '-','LineWidth',2 );
+plot (X(:,3),[X(:,1) X(:,3)] * [theta(1,:);theta(3,:)], 'g-','LineWidth',2 );
 hold off;
 
 

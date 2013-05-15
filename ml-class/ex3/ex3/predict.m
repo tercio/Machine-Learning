@@ -26,6 +26,7 @@ a1 = [ones(size(X,1), 1) X];
 z2 = a1 * Theta1' ;
 a2 = sigmoid (z2);
 
+
 % a2 => 5000 X 25
 % theta2 => 10 x 26
 
@@ -34,6 +35,7 @@ a2 = [ones(m, 1) a2];
 
 z3 = a2 * Theta2';  % 500x26 * 26 x 10  ==> 500 x 10
 a3 = sigmoid  (z3);
+
 
 [i,ix] = max(a3,[],2);
 p = ix;
